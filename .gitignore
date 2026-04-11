@@ -35,3 +35,11 @@ phase3_results/
 
 # Tests temporary files
 tests/tmp_*
+buildx-*
+grep_output.txt
+structure.txt
+run_phase3_fast.sh
+run_phase3_full_test.sh
+setup_phase3.sh
+docker-compose*.yml
+Dockerfile*
