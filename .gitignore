@@ -1,0 +1,37 @@
+# ------------------------
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.pdb
+*.egg-info/
+.venv/
+venv/
+env/
+ENV/
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# VSCode
+.vscode/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Results and Phase3 outputs
+results/
+phase3_results/
+
+# Octave temporary files
+*.octave-history
+*.mat
+
+# FreeFEM temporary backups
+*.edp~
+*.txt~
+
+# Tests temporary files
+tests/tmp_*

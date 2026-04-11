@@ -1,0 +1,18 @@
+version: "3.9"
+
+services:
+  phase3-light-qt:
+    build:
+      context: .
+      dockerfile: Dockerfile.phase3.light.qt
+    container_name: phase3_light_qt
+    tty: true
+    volumes:
+      - ./python:/app/python
+      - ./octave:/app/octave
+      - ./data:/app/data
+    working_dir: /app
+    environment:
+      - DEBIAN_FRONTEND=noninteractive
+    command: bash -c "python3 /app/python/scripts/preprocess.py && octave --no-gui --quiet /app/octave/scripts/run_phase3_headless.m"
+    restart: on-failure

@@ -1,0 +1,5 @@
+# data/test_cases/soft_sample.txt
+Name: SoftIron
+CoreLoss: 1.2
+FluxDensity: 1.0
+MagField: 50

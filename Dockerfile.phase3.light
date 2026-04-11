@@ -1,0 +1,29 @@
+# ---- Dockerfile.phase3.light ----
+FROM ubuntu:22.04
+
+# Απενεργοποίηση interactive prompts
+ARG DEBIAN_FRONTEND=noninteractive
+
+# Βασικές ενημερώσεις & εγκατάσταση πακέτων
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+        python3 python3-pip python3-dev python3-setuptools python3-wheel \
+        octave gnuplot fonts-liberation \
+        build-essential wget curl cmake git \
+        libblas-dev liblapack-dev libgsl-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+# Ορισμός workdir
+WORKDIR /app
+
+# Αντιγραφή απαιτούμενων scripts / source
+COPY ./python /app/python
+COPY ./octave /app/octave
+COPY ./data /app/data
+
+# Αν θέλεις, εγκατάσταση Python requirements
+# COPY ./requirements.txt /app/
+# RUN pip3 install --no-cache-dir -r requirements.txt
+
+# Default command (προαιρετικό)
+CMD ["bash"]

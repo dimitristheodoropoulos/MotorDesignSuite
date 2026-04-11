@@ -1,0 +1,25 @@
+# =========================
+# PowertrainSimSuite Phase 2
+# Python 3.10 compatible
+# =========================
+
+# Data handling
+pandas>=2.0.3,<3.0.0
+
+# Plotting & visualization
+matplotlib>=3.7.0,<3.8.0
+
+# Numerical operations
+numpy>=1.24.4,<1.25.0
+
+# PDF generation
+reportlab>=4.0.0
+
+# HTML template rendering
+jinja2>=3.1.2
+
+# Optional PDF via HTML (requires wkhtmltopdf installed separately)
+pdfkit>=1.0.0
+
+# Optional: for data export or further automation
+openpyxl>=3.1.2

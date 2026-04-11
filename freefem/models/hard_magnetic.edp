@@ -1,0 +1,33 @@
+// hard_magnetic.edp – Hard magnetic material FEA (FreeFEM++)
+// Magnetostatic problem: -div(1/mur * grad(Az)) = Js
+
+// --- Material parameters (hard magnet: NdFeB-like) ---
+real mu0  = 4*pi*1e-7;
+real mur  = 1.05;        // relative permeability (hard magnet ~1)
+real Js   = 1e6;         // source current density [A/m^2]
+
+// --- Mesh: rectangular domain 1x1 ---
+mesh Th = square(20, 20, [x, y]);
+
+// --- FE space ---
+fespace Vh(Th, P1);
+Vh Az, vz;
+
+// --- Variational formulation ---
+solve Magnetostatic(Az, vz) =
+    int2d(Th)( (1.0/(mur*mu0)) * (dx(Az)*dx(vz) + dy(Az)*dy(vz)) )
+    - int2d(Th)( Js * vz )
+    + on(1, 2, 3, 4, Az=0);   // Dirichlet BC on all boundaries
+
+// --- Export mesh nodes + Bz approximation ---
+// Ensure output directory exists (FreeFEM has no mkdir, use relative path)
+ofstream fout("results/csv/hard_mesh.csv");
+fout << "x,y,Bz\n";
+for (int i = 0; i < Th.nv; i++) {
+    real xi = Th(i).x;
+    real yi = Th(i).y;
+    real Bz = mur * mu0 * (dx(Az)(xi, yi) + dy(Az)(xi, yi));
+    fout << xi << "," << yi << "," << Bz << "\n";
+}
+
+cout << "hard_mesh.csv saved (" << Th.nv << " nodes)" << endl;

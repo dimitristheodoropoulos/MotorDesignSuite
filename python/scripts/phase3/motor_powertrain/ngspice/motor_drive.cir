@@ -1,0 +1,24 @@
+* Motor Drive Dummy Circuit – Phase 3
+
+* DC source representing battery/drive voltage
+Vbat in 0 DC 48
+
+* Motor represented as RL load
+Rmotor in out 1
+Lmotor out 0 10m
+
+* Measurement nodes
+Cmeasure out 0 0.01
+
+* Transient analysis
+.tran 1ms 100ms
+
+* Control commands
+.control
+    run
+    * Export voltage & current to CSV
+    wrdata motor_drive.csv v(out) i(Vbat)
+    quit
+.endc
+
+.end

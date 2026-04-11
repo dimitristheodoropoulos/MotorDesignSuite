@@ -1,0 +1,64 @@
+# ---- Base image ----
+FROM ubuntu:22.04
+
+# Avoid interactive prompts during package installation
+ENV DEBIAN_FRONTEND=noninteractive
+
+WORKDIR /app
+
+# Copy the entire project directory into the container.
+# This ensures that the script and other necessary files are available.
+COPY . /app
+
+# ---- Dependencies ----
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential g++ gfortran cmake git wget curl flex bison \
+    python3 python3-pip python3-dev python3-setuptools python3-wheel \
+    liblapack-dev libblas-dev libarpack2-dev libsuitesparse-dev \
+    libhdf5-dev libssl-dev libcurl4-openssl-dev libgsl-dev \
+    libopenmpi-dev pkg-config libfftw3-dev libmetis-dev libscotch-dev \
+    autoconf automake libtool m4 unzip patch \
+    && rm -rf /var/lib/apt/lists/*
+
+# ---- Build FreeFem++ from source with autotools ----
+WORKDIR /tmp
+
+# Download and extract FreeFem++ source
+RUN wget https://github.com/FreeFem/FreeFem-sources/archive/refs/tags/v4.14.tar.gz \
+    && tar -xzf v4.14.tar.gz \
+    && mv FreeFem-sources-4.14 FreeFem-sources
+
+WORKDIR /tmp/FreeFem-sources
+
+# Configure and build FreeFem++ without problematic downloads
+RUN autoreconf -i \
+    && ./configure \
+        --disable-download \
+        --enable-optim \
+        --without-tetgen \
+        --without-mmg \
+        --without-mmg3d \
+        --without-yams \
+        --without-bemtool \
+        --without-htool \
+        --without-hpddm \
+        --without-parmmg \
+        --without-parmetis \
+        --without-scotch \
+        --without-ptscotch \
+        --without-superlu \
+        --without-mumps \
+        --without-nlopt \
+        --prefix=/usr/local \
+    && make -j$(nproc) \
+    && make install
+
+# ---- Verify installation and Cleanup ----
+ENV PATH="/usr/local/bin:${PATH}"
+RUN which FreeFem++
+RUN rm -rf /tmp/FreeFem-sources /tmp/v4.14.tar.gz
+
+# Use CMD to make the container more flexible.
+# The user's docker run command will now override this.
+# A separate ENTRYPOINT is no longer necessary since the user provides the command.
+CMD ["/bin/bash"]

@@ -1,0 +1,24 @@
+* Powertrain Dummy Circuit – Phase 3
+
+* DC source for powertrain
+Vpt in 0 DC 12
+
+* Simplified powertrain load: series RC
+Rpt in mid 5
+Cpt mid 0 0.01
+
+* Voltage measurement
+Vout mid 0
+
+* Transient analysis
+.tran 1ms 50ms
+
+* Control commands
+.control
+    run
+    * Export voltages & currents to CSV
+    wrdata powertrain_modeling.csv v(in) v(mid) i(Vpt)
+    quit
+.endc
+
+.end

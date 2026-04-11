@@ -1,0 +1,16 @@
+version: "3.9"
+
+services:
+  phase3-qt:
+    build:
+      context: .
+      dockerfile: Dockerfile.phase3.qt
+    container_name: phase3_qt
+    tty: true
+    volumes:
+      - ./python:/app/python
+      - ./octave:/app/octave
+      - ./data:/app/data
+    working_dir: /app
+    environment:
+      - DEBIAN_FRONTEND=noninteractive

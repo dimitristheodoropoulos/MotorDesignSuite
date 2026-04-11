@@ -1,0 +1,21 @@
+services:
+  phase3:
+    environment:
+      # Επιλογή workflow: "fast" ή "full"
+      - WORKFLOW=full
+      # Headless display για Octave/FreeFEM++
+      - DISPLAY=:0
+      - LIBGL_ALWAYS_INDIRECT=1
+      # Paths για CSV αποτελέσματα
+      - SOFT_MESH_CSV=/app/phase3_results/csv/soft_mesh.csv
+      - HARD_MESH_CSV=/app/phase3_results/csv/hard_mesh.csv
+    volumes:
+      # Mount φακέλων αποτελεσμάτων εκτός container
+      - ./phase3_results/csv:/app/phase3_results/csv
+      - ./phase3_results/plots:/app/phase3_results/plots
+      - ./phase3_results/reports:/app/phase3_results/reports
+      - ./phase3_results/logs:/app/phase3_results/logs
+      # Mount των scripts του project για άμεσες αλλαγές
+      - ./python/scripts:/app/python/scripts
+      # Mount κοινών εισόδων για FEA / FreeFEM
+      - ./common_inputs/csv:/app/common_inputs/csv

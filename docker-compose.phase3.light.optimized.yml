@@ -1,0 +1,17 @@
+version: "3.9"
+
+services:
+  phase3-light:
+    build:
+      context: .
+      dockerfile: Dockerfile.phase3.light.optimized
+    container_name: phase3_light
+    tty: true
+    volumes:
+      - ./python:/app/python
+      - ./octave:/app/octave
+      - ./data:/app/data
+    working_dir: /app
+    environment:
+      - DEBIAN_FRONTEND=noninteractive
+    command: bash

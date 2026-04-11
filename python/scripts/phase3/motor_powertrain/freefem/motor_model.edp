@@ -1,0 +1,65 @@
+// motor_model.edp – FreeFEM template for motor/powertrain analysis
+// Headless version for minimal Docker image
+
+load "msh3"
+
+// =============================================================================
+// Parameters
+// =============================================================================
+real mu0 = 4*pi*1e-7;
+real J   = 1.0;      // Current density placeholder
+real Bmax= 1.5;      // Max flux density placeholder
+
+// =============================================================================
+// Import mesh (with FreeFEM-native check)
+// =============================================================================
+string meshFile = "../../../data/soft_mesh.mesh";
+mesh Th;
+
+if (fileexist(meshFile)) {
+    Th = readmesh(meshFile);
+    cout << "✅ Loaded mesh: " << meshFile << endl;
+} else {
+    cout << "⚠️ Mesh file not found: " << meshFile 
+         << ". Using fallback square mesh." << endl;
+    Th = square(20,20); // fallback mesh
+}
+
+// =============================================================================
+// Finite element space and magnetostatic solve
+// =============================================================================
+fespace Vh(Th, P1);
+Vh Az, v;
+
+problem magnet(Az, v) =
+    int2d(Th)( (1.0/mu0) * (dx(Az)*dx(v) + dy(Az)*dy(v)) )
+  - int2d(Th)( J * v )
+  + on(1, Az = 0);
+
+magnet;
+
+// =============================================================================
+// Placeholder results
+// =============================================================================
+real[int] B(Th.nv);
+real[int] core_loss(Th.nv);
+
+for(int i = 0; i < Th.nv; i++) {
+    B[i] = Bmax;
+    core_loss[i] = J*J;
+}
+
+// =============================================================================
+// Save results
+// =============================================================================
+string results_dir = "../../../data";
+ofstream fout(results_dir + "/fem_output_motor.csv");
+
+fout << "B,CoreLoss\n";
+for(int i = 0; i < Th.nv; i++)
+    fout << B[i] << "," << core_loss[i] << "\n";
+
+fout.close();
+
+cout << "✅ FreeFEM motor simulation completed. Results saved to "
+     << results_dir << "/fem_output_motor.csv" << endl;

@@ -1,0 +1,10 @@
+* Simple motor model placeholder
+V1 in 0 DC 12
+R1 in out 1
+C1 out 0 0.01
+.tran 0.01 1
+.control
+run
+quit
+.endc
+.end

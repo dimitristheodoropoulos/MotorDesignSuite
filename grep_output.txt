@@ -1,0 +1,22 @@
+./python/requirements.txt:# PowertrainSimSuite Phase 2
+./python/scripts/phase3/common_inputs/reports/Phase2_Report.html:    <title>PowertrainSimSuite Phase 2 Report</title>
+./python/scripts/phase3/common_inputs/reports/Phase2_Report.html:    <h1>PowertrainSimSuite Phase 2 Report</h1>
+./python/scripts/phase3/run_phase3_min.sh:echo "=== PowertrainSimSuite Phase 3 FULL Workflow (Light Container) ==="
+./python/scripts/phase3/run_phase3.sh:echo "=== PowertrainSimSuite Phase 3 FULL Workflow (Container) ==="
+./python/scripts/materials.py:# /home/testuser/PowertrainSimSuite/python/scripts/materials.py
+./python/scripts/phase2/html_to_pdf.py:PROJECT_ROOT = Path(__file__).resolve().parents[3]  # PowertrainSimSuite/
+./python/scripts/phase2/templates/report_template.html:    <title>PowertrainSimSuite Phase 2 Report</title>
+./python/scripts/phase2/templates/report_template.html:    <h1>PowertrainSimSuite Phase 2 Report</h1>
+./python/scripts/phase2/generate_report.py:PROJECT_ROOT = Path(__file__).resolve().parents[3]  # PowertrainSimSuite/
+./python/scripts/check_outputs.py:# /home/testuser/PowertrainSimSuite/python/scripts/check_outputs.py
+./run_phase3_fast.sh:echo "=== PowertrainSimSuite Phase 3 FAST Workflow (Octave + Python headless) ==="
+./run_all.sh:echo "=== PowertrainSimSuite Phase 3 Workflow (Headless) ==="
+./setup_phase3.sh:PROJECT_ROOT="/home/testuser/PowertrainSimSuite"
+./.git/COMMIT_EDITMSG:Initial commit: Phase 1 PowertrainSimSuite
+./.git/logs/refs/heads/main:0000000000000000000000000000000000000000 d5a2c6ca98278b63ac6e7eaf17a0d14758595698 Dimitris Theodoropoulos <dimitris.theodoropoulos@gmail.com> 1757849728 +0300	commit (initial): Initial commit: Phase 1 PowertrainSimSuite
+./.git/logs/HEAD:0000000000000000000000000000000000000000 d5a2c6ca98278b63ac6e7eaf17a0d14758595698 Dimitris Theodoropoulos <dimitris.theodoropoulos@gmail.com> 1757849728 +0300	commit (initial): Initial commit: Phase 1 PowertrainSimSuite
+./.git/config:	url = https://github.com/dimitristheodoropoulos/PowertrainSimSuite.git
+./octave/scripts/vehicle_dynamics_plot.m:% Octave Vehicle Dynamics Plotting for PowertrainSimSuite Phase3
+./octave/scripts/visualization.m:% Octave Visualization for PowertrainSimSuite Phase3 FAST
+./octave/utils/helpers.m:% helpers.m - common Octave functions for PowertrainSimSuite
+./Dockerfile.full:# Dockerfile.full – PowertrainSimSuite Phase3 Full Workflow

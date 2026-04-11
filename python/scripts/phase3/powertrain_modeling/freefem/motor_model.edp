@@ -1,0 +1,47 @@
+// /////////////////////////////////////////////////////////////
+// motor_model.edp
+// FreeFEM++ Phase 3 motor/powertrain simulation
+// Compatible with FreeFEM++ v4.14
+// /////////////////////////////////////////////////////////////
+
+// ----------------------------
+// Parameters
+// ----------------------------
+real mu0   = 4.0e-7 * pi;
+real J     = 1.0;
+real Bmax  = 1.5;
+real f     = 50;
+
+real kloss = 1e-2;
+real alpha  = 1.5;
+real beta   = 2.0;
+
+// ----------------------------
+// Mesh
+// ----------------------------
+mesh Th;
+string meshFile = "__MESH_FILE__"; // placeholder, replaced at runtime
+
+// Directly read mesh; assume it exists
+Th = readmesh(meshFile);
+
+// ----------------------------
+// Finite element space
+// ----------------------------
+fespace Vh(Th, P1);
+Vh u, v;
+
+// ----------------------------
+// PDE: simple Laplace / Heat equation
+// ----------------------------
+problem HeatEq(u, v) =
+    int2d(Th)( dx(u)*dx(v) + dy(u)*dy(v) )
+  - int2d(Th)( 1.0 * v );
+
+u = 0;
+HeatEq;
+
+// ----------------------------
+// Plot / output
+// ----------------------------
+plot(u, value=true, cmm="Motor demo solution", fill=true);

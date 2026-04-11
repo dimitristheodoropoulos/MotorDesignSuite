@@ -1,0 +1,35 @@
+// /////////////////////////////////////////////////////////////
+// modeling.edp
+// FreeFEM++ Phase 3 powertrain simulation
+// Compatible with FreeFEM++ v4.14
+// /////////////////////////////////////////////////////////////
+
+// ----------------------------
+// Mesh
+// ----------------------------
+mesh Th;
+string meshFile = "__MESH_FILE__"; // placeholder, replaced at runtime
+
+// Directly read mesh; assume it exists
+Th = readmesh(meshFile);
+
+// ----------------------------
+// Finite element space
+// ----------------------------
+fespace Vh(Th, P1);
+Vh u, v;
+
+// ----------------------------
+// PDE: simple Laplace / Heat equation
+// ----------------------------
+problem HeatEq(u, v) =
+    int2d(Th)( dx(u)*dx(v) + dy(u)*dy(v) )
+  - int2d(Th)( 1.0 * v );
+
+u = 0;
+HeatEq;
+
+// ----------------------------
+// Plot / output
+// ----------------------------
+plot(u, value=true, cmm="Powertrain demo solution", fill=true);

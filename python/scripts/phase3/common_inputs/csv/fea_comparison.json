@@ -1,0 +1,10 @@
+{
+  "soft": {
+    "material_core_loss": 1.0,
+    "fea_core_loss": 1.2
+  },
+  "hard": {
+    "material_core_loss": 2.75,
+    "fea_core_loss": 0.8
+  }
+}

@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>PowertrainSimSuite Phase 2 Report</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; font-size: 12pt; }
+        h1, h2, h3 { color: #003366; margin-top: 30px; margin-bottom: 10px; }
+        table { border-collapse: collapse; width: 100%; margin-bottom: 20px; page-break-inside: avoid; }
+        th, td { border: 1px solid #ddd; padding: 8px; }
+        pre { background: #f5f5f5; padding: 10px; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word; page-break-inside: avoid; }
+        img { max-width: 100%; height: auto; margin: 10px 0; page-break-inside: avoid; }
+        .page-break { page-break-after: always; }
+        hr { margin: 40px 0; border: 0; border-top: 1px solid #ccc; }
+    </style>
+</head>
+<body>
+    <h1>PowertrainSimSuite Phase 2 Report</h1>
+
+    <h2>CSV Data Preview</h2>
+    
+        <h3>fea_input.csv</h3>
+        <table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Name</th>
+      <th>CoreLoss</th>
+      <th>FluxDensity</th>
+      <th>MagField</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>SoftIron</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>50</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>HardAlloy</td>
+      <td>2.0</td>
+      <td>1.5</td>
+      <td>100</td>
+    </tr>
+  </tbody>
+</table>
+    
+        <h3>fea_results.csv</h3>
+        <table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Material</th>
+      <th>MeanCoreLoss</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>soft</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>hard</td>
+      <td>2.0</td>
+    </tr>
+  </tbody>
+</table>
+    
+        <h3>hard_mesh.csv</h3>
+        <table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>x</th>
+      <th>y</th>
+      <th>Bz</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>x</td>
+      <td>y</td>
+      <td>Bz</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>x</td>
+      <td>y</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>0.1</td>
+      <td>0.0</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>0.2</td>
+      <td>0.0</td>
+      <td>NaN</td>
+    </tr>
+  </tbody>
+</table>
+    
+        <h3>hard_summary.csv</h3>
+        <table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>material_count</th>
+      <th>mean_core_loss</th>
+      <th>mean_flux_density</th>
+      <th>mean_mag_field</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1</td>
+      <td>2.0</td>
+      <td>1.5</td>
+      <td>100.0</td>
+    </tr>
+  </tbody>
+</table>
+    
+        <h3>soft_mesh.csv</h3>
+        <table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>x</th>
+      <th>y</th>
+      <th>Bz</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>x</td>
+      <td>y</td>
+      <td>Bz</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>x</td>
+      <td>y</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>0.1</td>
+      <td>0.0</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>0.2</td>
+      <td>0.0</td>
+      <td>NaN</td>
+    </tr>
+  </tbody>
+</table>
+    
+        <h3>soft_summary.csv</h3>
+        <table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>material_count</th>
+      <th>mean_core_loss</th>
+      <th>mean_flux_density</th>
+      <th>mean_mag_field</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1</td>
+      <td>1.0</td>
+      <td>1.0</td>
+      <td>50.0</td>
+    </tr>
+  </tbody>
+</table>
+    
+
+    <div class="page-break"></div>
+
+    <h2>JSON Summaries</h2>
+    
+        <h3>fea_comparison.json</h3>
+        <pre>{
+  &#34;soft&#34;: {
+    &#34;material_core_loss&#34;: 1.0,
+    &#34;fea_core_loss&#34;: 1.2
+  },
+  &#34;hard&#34;: {
+    &#34;material_core_loss&#34;: 2.75,
+    &#34;fea_core_loss&#34;: 0.8
+  }
+}</pre>
+    
+
+    <div class="page-break"></div>
+
+    <h2>Material Reports</h2>
+    
+
+    <div class="page-break"></div>
+
+    <h2>Plots</h2>
+    
+        <h3>fea_comparison.png</h3>
+        <img src="../plots/fea_comparison.png" alt="../plots/fea_comparison.png">
+    
+</body>
+</html>
