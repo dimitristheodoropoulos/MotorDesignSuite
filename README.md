@@ -14,7 +14,8 @@
 | LPTN vs FEA Error (Winding) | 2.0°C |
 | Pareto-Optimal Designs | 26 / 4500 evaluated |
 | Peak Power (Torque-Speed) | 52.4 kW |
-| Parallel Optimizer Speed | 4500 designs in 0.3s (4 workers) |
+| Parallel Optimizer Speed | 4500 designs in 0.3s (4 workers, multiprocessing) |
+| Dask Distributed Speed | 4500 designs in 1.2s (LocalCluster, 4 workers) |
 | SQL Database Records | 4500 simulation results, avg efficiency 86.99% |
 
 ---
@@ -32,12 +33,14 @@ Phase 3a: Powertrain Modeling      (multi-criteria optimization)
 Phase 3b: Motor Powertrain         (efficiency map, torque-speed, loss breakdown)
 Phase 3c: Optimus Thermal          (LPTN, cooling scenarios, FEA validation)
         ↓
-Parallel Pareto Optimizer          (4 workers, multiprocessing pool)
+Parallel Pareto Optimizer          (multiprocessing.Pool, 4 workers)
+        ↓  or
+Dask Distributed Optimizer         (LocalCluster, 4 workers, dashboard :8787)
         ↓
 SQLite Persistence                 (SQL queries on 4500+ simulation records)
         ↓
 Streamlit Dashboard + PDF Report
-
+```
 
 ---
 
@@ -79,20 +82,33 @@ Streamlit Dashboard + PDF Report
 ### Phase 4 – Parallel Optimization & SQL Persistence
 
 **Distributed-Ready Simulation Framework**
-- Parallel Pareto optimizer using Python `multiprocessing.Pool` (4 workers)
-- 4500 design evaluations completed in **0.3 seconds**
-- Full SQL persistence via **SQLite** — all simulation results stored and queryable
-- Supports complex analytical queries across the entire design space:
 
+Three optimizer implementations demonstrating progressive scalability:
 
--- Example: best designs at mid-range operating speed
+| Optimizer | Backend | Speed | Use Case |
+|-----------|---------|-------|----------|
+| `optimizer.py` | Single-threaded | baseline | Reference implementation |
+| `optimizer_parallel_sql.py` | `multiprocessing.Pool` (4 workers) | **0.3s** | High-throughput local execution |
+| `optimizer_dask.py` | Dask `LocalCluster` (4 workers) | **1.2s** | Distributed architecture, scalable to cluster |
+
+- Full SQL persistence via **SQLite** — all 4500 simulation results stored and queryable
+- Dask dashboard available at `http://localhost:8787` during execution
+- Architecture designed for distributed-simulation workflows — scalable to multi-node cluster deployment without code restructuring
+
+**Example SQL queries on simulation results:**
+```sql
+-- Total records
+SELECT COUNT(*) FROM simulations;
+
+-- Average efficiency across design space
+SELECT AVG(Efficiency) FROM simulations;
+
+-- Best designs at mid-range operating speed
 SELECT R_s, Efficiency, TotalLosses_W
 FROM simulations
 WHERE Torque_Nm > 200 AND Speed_rpm BETWEEN 4000 AND 6000
 ORDER BY Efficiency DESC LIMIT 10;
 ```
-
-- Architecture designed for distributed-simulation workflows — scalable to multi-node cluster deployment (Ray / Celery) without code restructuring
 
 ---
 
@@ -110,7 +126,7 @@ ORDER BY Efficiency DESC LIMIT 10;
 
 ## Project Structure
 
-
+```
 MotorDesignSuite/
 ├── python/scripts/
 │   ├── materials.py
@@ -140,27 +156,31 @@ MotorDesignSuite/
 │   └── hysteresis_model.cir
 ├── optimizer.py                         ← Pareto 3-objective optimizer (single-threaded)
 ├── optimizer_parallel_sql.py            ← Parallel optimizer + SQLite persistence ⭐
+├── optimizer_dask.py                    ← Dask distributed optimizer + SQLite ⭐
 ├── dashboard.py                         ← Streamlit interactive dashboard
 ├── generate_report.py                   ← Tesla-style PDF report
 ├── run_all.sh                           ← full 9-step workflow
 ├── results/
 │   ├── csv/
 │   ├── plots/
+│   │   ├── pareto_front_sql.png
+│   │   └── pareto_front_dask.png
 │   ├── reports/
 │   ├── optimus_thermal/
-│   └── optimization_results.db          ← SQLite database (4500 records) ⭐
+│   ├── optimization_results.db          ← SQLite database (multiprocessing) ⭐
+│   └── optimization_results_dask.db     ← SQLite database (Dask) ⭐
 └── tests/
     ├── test_python.py
     ├── test_lptn.py
     ├── test_octave_core.m
     └── test_ngspice.sh
-
+```
 
 ---
 
 ## Installation & Setup
 
-
+```bash
 git clone https://github.com/dimitristheodoropoulos/MotorDesignSuite.git
 cd MotorDesignSuite
 
@@ -168,55 +188,61 @@ python3 -m venv venv
 source venv/bin/activate
 
 pip install -r python/requirements.txt
-pip install streamlit reportlab scipy
-
+pip install streamlit reportlab scipy dask distributed
+```
 
 External tools (install via apt):
-
+```bash
 sudo apt install octave freefem++ ngspice sqlite3
-
+```
 
 ---
 
 ## Running
 
 ### Full workflow (9 steps)
-
+```bash
 bash run_all.sh
+```
 
-
-### Parallel optimizer with SQL persistence (recommended)
-
+### Parallel optimizer with SQL persistence
+```bash
 python3 optimizer_parallel_sql.py
+```
 
+### Dask distributed optimizer (with live dashboard)
+```bash
+python3 optimizer_dask.py
+# Dashboard available at http://localhost:8787
+```
 
 ### Query results directly in SQLite
-
+```bash
 sqlite3 results/optimization_results.db
-
-
+```
+```sql
 SELECT COUNT(*) FROM simulations;
 SELECT AVG(Efficiency) FROM simulations;
 SELECT R_s, Efficiency, TotalLosses_W
 FROM simulations
 WHERE Torque_Nm > 200 AND Speed_rpm BETWEEN 4000 AND 6000
 ORDER BY Efficiency DESC LIMIT 10;
-
+```
 
 ### Interactive dashboard
-
+```bash
 streamlit run dashboard.py
-
+```
 
 ### Original Pareto optimizer
-
+```bash
 python3 optimizer.py
-
+```
 
 ### PDF engineering report
-
+```bash
 python3 generate_report.py
-
+```
 
 ---
 
@@ -231,20 +257,21 @@ python3 generate_report.py
 | Motor Powertrain | `python/scripts/phase3/motor_powertrain/results/` |
 | LPTN Thermal | `python/scripts/phase3/optimus_thermal/results/` |
 | PDF Report | `results/reports/MotorDesignSuite_Report.pdf` |
-| **SQL Database** | **`results/optimization_results.db`** |
+| **SQL Database (multiprocessing)** | **`results/optimization_results.db`** |
+| **SQL Database (Dask)** | **`results/optimization_results_dask.db`** |
 | Logs | `results/logs/` |
 
 ---
 
 ## Running Tests
 
-
+```bash
 source venv/bin/activate
 python3 tests/test_python.py
 python3 tests/test_lptn.py
 octave --silent tests/test_octave_core.m
 bash tests/test_ngspice.sh
-
+```
 
 ---
 
@@ -260,7 +287,8 @@ bash tests/test_ngspice.sh
 | Matplotlib | Visualization |
 | Streamlit | Interactive dashboard |
 | ReportLab | PDF report generation |
-| **multiprocessing** | **Parallel simulation workers** |
+| **multiprocessing** | **Parallel simulation workers (Pool)** |
+| **Dask / distributed** | **Distributed simulation cluster (LocalCluster)** |
 | **SQLite** | **SQL persistence for simulation results** |
 
 ---
@@ -269,6 +297,7 @@ bash tests/test_ngspice.sh
 
 - Fully software-based — no proprietary hardware required
 - All tools are free/open-source
-- Parallel optimizer uses `multiprocessing.Pool` — architected for distributed-simulation workflows, scalable to multi-node deployment without code restructuring
-- SQLite database supports full SQL analytics on 4500+ simulation records
-- Workflow: magnetic materials → FEA → powertrain → thermal → parallel optimization → SQL persistence → dashboard
+- Three optimizer implementations demonstrate scalability progression: single-threaded → multiprocessing → Dask distributed
+- Dask LocalCluster runs a genuine distributed scheduler locally, scalable to multi-node without code changes
+- SQLite databases support full SQL analytics on 4500+ simulation records each
+- Workflow: magnetic materials → FEA → powertrain → thermal → distributed optimization → SQL persistence → dashboard
