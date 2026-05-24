@@ -24,6 +24,7 @@ Thumbs.db
 # Results and Phase3 outputs
 results/
 phase3_results/
+!results/optimization_results.db
 
 # Octave temporary files
 *.octave-history
