@@ -44,3 +44,4 @@ run_phase3_full_test.sh
 setup_phase3.sh
 docker-compose*.yml
 Dockerfile*
+!results/optimization_results_dask.db
